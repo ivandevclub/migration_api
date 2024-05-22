@@ -87,6 +87,14 @@ DATABASES = {
         'CLIENT': {
             'host': os.getenv('MONGO_URI')
         }
+    },
+    'postgres': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'accesos',
+        'USER': 'imacedonio',
+        'PASSWORD': 'vBso2SDfmJr26w',
+        'HOST': 'spclub-db.cgclm4h34nyq.us-east-1.rds.amazonaws.com',
+        'PORT': 5432
     }
 }
 
