@@ -91,9 +91,9 @@ DATABASES = {
     'postgres': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'accesos',
-        'USER': 'imacedonio',
-        'PASSWORD': 'vBso2SDfmJr26w',
-        'HOST': 'spclub-db.cgclm4h34nyq.us-east-1.rds.amazonaws.com',
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST': os.getenv('POSTGRES_HOST'),
         'PORT': 5432
     }
 }
