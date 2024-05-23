@@ -8,7 +8,8 @@ from rest_framework.pagination import LimitOffsetPagination
 from .serializers.mongo.serializers import SocioSerializer
 from .models.mongo.models import Socio
 
-class GetCollectionView(APIView):
+#view to test mongo connection
+class GetMongoCollectionView(APIView):
     permission_classes = [permissions.AllowAny]
     serializer_class = SocioSerializer
     
@@ -26,7 +27,24 @@ class GetCollectionView(APIView):
         except Exception as e:
             return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
+class PostMongoCollectionVIew(APIView):
+    permission_classes = [permissions.AllowAny]
+    serializer_class = SocioSerializer
+    
+    def post(self,request):
+        try:
+            if (not request.data):
+                return Response({"message": "Data no puede estar vacio"}, status=status.HTTP_400_BAD_REQUEST)
+            serialized_data = self.serializer_class(data=request.data)
+            if serialized_data.is_valid():
+                print("paso la serializacion")
+                serialized_data.save()
+                return Response({ "message": "Creado con exito!"}, status=status.HTTP_200_OK)   
+            return Response({"error": serialized_data.errors}, status=status.HTTP_400_BAD_REQUEST)     
+        except Exception as e:
+            return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+#view to test postgresql connection
 class GetPostgresColectionView(APIView):
     permission_classes = [permissions.AllowAny]
     
@@ -44,6 +62,7 @@ class GetPostgresColectionView(APIView):
             return Response("No data yet", status=status.HTTP_200_OK)
         except Exception as e:
             return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
             
 
             
