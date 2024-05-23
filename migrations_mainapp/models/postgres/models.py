@@ -50,18 +50,18 @@ class SocioPg(models.Model):
     documento = models.CharField(max_length=255, null=False, default="")
     email = models.EmailField(max_length=255, null=False, default="")
     fecha_nacimiento = models.CharField(max_length=255, null=False, default="")
-    domicilio = models.OneToOneField(DomicilioPg, on_delete=models.CASCADE)
+    domicilio = models.JSONField()
     last_subscription_date = models.DateTimeField(null=False, default=timezone.now)
     fecha_vigencia_plan = models.DateTimeField(null=False, default=timezone.now)  # vencimiento del plan
     status = models.CharField(max_length=255, null=False, default="", choices=STATUS_CHOICES)
     archived = models.BooleanField(null=False, default=False)
     createdAt = models.DateTimeField(null=False, auto_now_add=True)
     updatedAt = models.DateTimeField(null=False, auto_now=True)
-    apto_medico = models.OneToOneField(AptoPg, on_delete=models.CASCADE)
-    plan = models.OneToOneField(PlanPg, on_delete=models.CASCADE)
+    apto_medico = models.JSONField()
+    plan = models.JSONField()
 
     def __str__(self):
         return f"{self.nombre} {self.apellido}"
     
     class Meta:
-        db_table = "socios"
+        db_table = "Socio"
