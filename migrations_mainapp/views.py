@@ -51,7 +51,11 @@ class PostPostgresCollectionView(APIView):
         if (not request.data):
             return Response({"error": "Data no puede estar vacio"}, status=status.HTTP_400_BAD_REQUEST)
         try:
-            serializer = self.serializer_class(data=request.data)
+            parsed_data = request.data.copy()
+            if 'documento_tipo' in parsed_data:
+                del parsed_data['documento_tipo']
+                print(parsed_data)
+            serializer = self.serializer_class(data=parsed_data)
             if serializer.is_valid():
                 try:
                     serializer.save()
@@ -66,16 +70,15 @@ class MigrationApiView(APIView):
     permission_classes = [permissions.AllowAny]
     mongo_serializer_class = SocioSerializer
     postgre_serializer_class = SocioPgSerializer
+    
     def post(self,request):
         if (not request.data):
             return Response({"error": "Data no puede estar vacio"}, status=status.HTTP_400_BAD_REQUEST)
         
         try:
-            #validar campos de mongo
             mongo_serialized_data = self.mongo_serializer_class(data=request.data)
             mongo_serialized_data.is_valid(raise_exception=True)
             
-            #validar campos de postgresql
             postgre_serialized_data = self.postgre_serializer_class(data=request.data)
             postgre_serialized_data.is_valid(raise_exception=True)
             
