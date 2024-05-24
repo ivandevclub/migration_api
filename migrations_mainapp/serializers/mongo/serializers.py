@@ -5,3 +5,6 @@ class SocioSerializer(ModelSerializer):
     class Meta:
         model = Socio
         fields = "__all__"
+
+    def create(self, validated_data):
+        return Socio.objects.using('default').create(**validated_data)

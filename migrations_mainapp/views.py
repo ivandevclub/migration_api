@@ -22,8 +22,11 @@ class PostMongoCollectionVIew(APIView):
                 return Response({"message": "Data no puede estar vacio"}, status=status.HTTP_400_BAD_REQUEST)
             serialized_data = self.serializer_class(data=request.data)
             if serialized_data.is_valid():
-                print("paso la serializacion")
-                serialized_data.save()
+                try:
+                    serialized_data.save()
+                    print("paso la serializacion")
+                except Exception as e:
+                    return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
                 return Response({ "message": "Creado con exito!"}, status=status.HTTP_201_CREATED)  
             logging.error("Error en la serializacion", str(e), exc_info=True) 
             return Response({"error": serialized_data.errors}, status=status.HTTP_400_BAD_REQUEST)     
@@ -35,23 +38,27 @@ class PostMongoCollectionVIew(APIView):
 class PostPostgresCollectionView(APIView):
     permission_classes = [permissions.AllowAny]
     serializer_class = SocioPgSerializer
-    
+
     def get(self,request):
-        data = SocioPg.objects.all()
-        serialized_data = self.serializer_class(data, many=True)
-        return Response(serialized_data.data, status=status.HTTP_200_OK)
+        try:
+            data_instance = SocioPg.objects.all()
+            serialized_data = self.serializer_class(data_instance, many=True)
+            return Response(serialized_data.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
     def post(self,request):
         if (not request.data):
             return Response({"error": "Data no puede estar vacio"}, status=status.HTTP_400_BAD_REQUEST)
         try:
-            print(request.data)
-            serialized_data = self.serializer_class(data=request.data)
-            if serialized_data.is_valid():
-                print("paso la serializacion!")
-                serialized_data.save()
+            serializer = self.serializer_class(data=request.data)
+            if serializer.is_valid():
+                try:
+                    serializer.save()
+                except Exception as e:
+                    return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
                 return Response("Recurso creado con exito en Postgresql", status=status.HTTP_201_CREATED)
-            return Response({"error": serialized_data.errors}, status=status.HTTP_400_BAD_REQUEST)            
+            return Response({"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)            
         except Exception as e:
             return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         

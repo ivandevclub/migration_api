@@ -64,4 +64,4 @@ class SocioPg(models.Model):
         return f"{self.nombre} {self.apellido}"
     
     class Meta:
-        db_table = "Socio"
+             db_table = 'socios\".\"Socio'

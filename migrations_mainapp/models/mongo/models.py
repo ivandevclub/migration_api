@@ -67,4 +67,4 @@ class Socio(models.Model):
         return f"{self.nombre} {self.apellido}"
     
     class Meta:
-        db_table = "clientes"
+        db_table = 'clientes'
