@@ -35,7 +35,7 @@ class SocioPg(models.Model):
     GENERO_CHOICES = [
         ("Masculino", "Masculino"),
         ("Femenino", "Femenino"),
-        ("Otro", "Otro")
+        ("Otro", "Otro"),
     ]
 
     DNI_CHOICES = [
